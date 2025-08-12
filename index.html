@@ -1,31 +1,61 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="id">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Tonton Iklan - Reward</title>
-  <link rel="stylesheet" href="/style.css">
-
-  <!-- Giga App ID -->
-  <meta name="giga-app-id" content="1576">
-
-  <!-- Script iklan dari Giga -->
-  <script src="https://ad.gigapub.tech/script?id=1576" async></script>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>🎉 Giga Hub - Auto Iklan</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      margin: 0;
+      padding: 0;
+      background: #f4f4f4;
+    }
+    h1 { color: #ff5733; margin-top: 20px; }
+    #saldo {
+      font-weight: bold;
+      font-size: 18px;
+      color: #333;
+    }
+    #status {
+      margin-top: 15px;
+      color: #555;
+    }
+    /* Overlay full screen */
+    #overlay {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: rgba(0, 0, 0, 0.85);
+      color: white;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+      z-index: 9999;
+      display: none;
+    }
+    #overlay h2 {
+      margin-bottom: 10px;
+    }
+  </style>
 </head>
 <body>
-  <div class="container">
-    <h1>🎉 Giga Hub - Tonton Iklan</h1>
-    <p id="balance">Saldo: <span id="balVal">0</span> KOT</p>
+  <h1>🎉 Giga Hub</h1>
+  <p>Saldo: <span id="saldo">0 KOT</span></p>
+  <p id="status">Memuat iklan...</p>
 
-    <div id="card" class="card">
-      <h2>🎬 Iklan Sedang Diputar</h2>
-      <div id="countdownWrap" class="countdown">
-        Refresh iklan dalam: <span id="countdown">30</span> detik
-      </div>
-      <video id="adVideo" controls style="max-width:100%; margin-top:10px;"></video>
-      <p id="errorMsg" class="error" style="display:none"></p>
-    </div>
+  <!-- Overlay iklan -->
+  <div id="overlay">
+    <h2>🔊 Iklan sedang diputar...</h2>
+    <p>Harap tunggu hingga selesai</p>
   </div>
-  <script src="/app.js"></script>
+
+  <!-- Script iklan Giga -->
+  <script src="https://ad.gigapub.tech/script?id=1512"></script>
+  <!-- Script aplikasi -->
+  <script src="app.js"></script>
 </body>
 </html>
