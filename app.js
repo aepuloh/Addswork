@@ -1,98 +1,28 @@
-const VIDEO = document.getElementById('adVideo');
-const ERROR = document.getElementById('errorMsg');
-const COUNTDOWN = document.getElementById('countdown');
-const BALVAL = document.getElementById('balVal');
+let saldo = parseInt(localStorage.getItem("saldo") || 0);
+document.getElementById("saldo").innerText = saldo + " KOT";
 
-const APP_ID = document.querySelector('meta[name="giga-app-id"]').content;
+function putarIklan() {
+  let overlay = document.getElementById("overlay");
+  let statusEl = document.getElementById("status");
 
-let countdown = 30;
-let timer = null;
-let currentAd = null;
-const USER = 'demo';
+  overlay.style.display = "flex"; // tampilkan layar penuh
+  statusEl.innerText = "Iklan sedang diputar...";
 
-function startCountdown() {
-  clearInterval(timer);
-  countdown = 30;
-  COUNTDOWN.textContent = countdown;
-  timer = setInterval(() => {
-    countdown--;
-    COUNTDOWN.textContent = countdown;
-    if (countdown <= 0) {
-      clearInterval(timer);
-      fetchAd();
-    }
-  }, 1000);
-}
-
-async function fetchAd() {
-  showError('');
-  try {
-    const res = await fetch(`/api/getAd?user=${USER}&appId=${APP_ID}`);
-    if (!res.ok) throw new Error('Gagal memuat iklan');
-    const data = await res.json();
-    currentAd = data;
-    playAd(data.videoUrl);
-  } catch (err) {
-    console.error(err);
-    showError('Terjadi kesalahan saat memuat iklan.');
-    startCountdown();
-  }
-}
-
-function playAd(url) {
-  if(!url) { showError('Data iklan tidak tersedia'); startCountdown(); return; }
-  VIDEO.src = url;
-  VIDEO.load();
-  VIDEO.onended = () => {
-    claimReward();
-  };
-  VIDEO.onerror = () => {
-    showError('Iklan tidak dapat diputar.');
-    startCountdown();
-  };
-  VIDEO.play().catch(err => {
-    console.warn('Play blocked', err);
-    showError('Tekan tombol play pada video.');
-  });
-}
-
-async function claimReward() {
-  if(!currentAd) return;
-  try {
-    const res = await fetch('/api/claimReward', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ user: USER, adId: currentAd.adId, appId: APP_ID })
+  window.showGiga()
+    .then(() => {
+      saldo += 10;
+      localStorage.setItem("saldo", saldo);
+      document.getElementById("saldo").innerText = saldo + " KOT";
+      statusEl.innerText = "✅ Reward 10 KOT diterima!";
+      overlay.style.display = "none"; // sembunyikan layar penuh
+      setTimeout(putarIklan, 3000); // jeda 3 detik
+    })
+    .catch(e => {
+      console.error("Gagal memuat iklan:", e);
+      statusEl.innerText = "⚠️ Gagal memuat iklan, mencoba lagi...";
+      overlay.style.display = "none"; // sembunyikan layar penuh walau gagal
+      setTimeout(putarIklan, 5000); // coba lagi setelah 5 detik
     });
-    const data = await res.json();
-    if (data && data.success) {
-      showError('Berhasil klaim reward: +' + data.reward + ' KOT');
-      await updateBalance();
-    }
-  } catch (err) {
-    console.error(err);
-  } finally {
-    currentAd = null;
-    startCountdown();
-  }
 }
 
-async function updateBalance() {
-  try {
-    const res = await fetch(`/api/balance?user=${USER}&appId=${APP_ID}`);
-    if (!res.ok) return;
-    const d = await res.json();
-    BALVAL.textContent = d.balance || 0;
-  } catch (err) {
-    console.warn(err);
-  }
-}
-
-function showError(msg) {
-  if (!msg) { ERROR.style.display = 'none'; ERROR.textContent = ''; }
-  else { ERROR.style.display = 'block'; ERROR.textContent = msg; }
-}
-
-// Jalankan otomatis saat halaman dibuka
-updateBalance();
-fetchAd();
+document.addEventListener("DOMContentLoaded", putarIklan);
