@@ -3,6 +3,8 @@ const ERROR = document.getElementById('errorMsg');
 const COUNTDOWN = document.getElementById('countdown');
 const BALVAL = document.getElementById('balVal');
 
+const APP_ID = document.querySelector('meta[name="giga-app-id"]').content;
+
 let countdown = 30;
 let timer = null;
 let currentAd = null;
@@ -25,7 +27,7 @@ function startCountdown() {
 async function fetchAd() {
   showError('');
   try {
-    const res = await fetch(`/api/getAd?user=${USER}`);
+    const res = await fetch(`/api/getAd?user=${USER}&appId=${APP_ID}`);
     if (!res.ok) throw new Error('Gagal memuat iklan');
     const data = await res.json();
     currentAd = data;
@@ -60,7 +62,7 @@ async function claimReward() {
     const res = await fetch('/api/claimReward', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ user: USER, adId: currentAd.adId })
+      body: JSON.stringify({ user: USER, adId: currentAd.adId, appId: APP_ID })
     });
     const data = await res.json();
     if (data && data.success) {
@@ -77,7 +79,7 @@ async function claimReward() {
 
 async function updateBalance() {
   try {
-    const res = await fetch(`/api/balance?user=${USER}`);
+    const res = await fetch(`/api/balance?user=${USER}&appId=${APP_ID}`);
     if (!res.ok) return;
     const d = await res.json();
     BALVAL.textContent = d.balance || 0;
