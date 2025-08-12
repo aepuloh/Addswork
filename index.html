@@ -1,0 +1,25 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Tonton Iklan - Reward</title>
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+  <div class="container">
+    <h1>🎉 Giga Hub - Tonton Iklan</h1>
+    <p id="balance">Saldo: <span id="balVal">0</span> KOT</p>
+
+    <div id="card" class="card">
+      <h2>🎬 Iklan Sedang Diputar</h2>
+      <div id="countdownWrap" class="countdown">
+        Refresh iklan dalam: <span id="countdown">30</span> detik
+      </div>
+      <video id="adVideo" controls style="max-width:100%; margin-top:10px;"></video>
+      <p id="errorMsg" class="error" style="display:none"></p>
+    </div>
+  </div>
+  <script src="/app.js"></script>
+</body>
+</html>
